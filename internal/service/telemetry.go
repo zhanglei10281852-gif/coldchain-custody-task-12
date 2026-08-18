@@ -56,13 +56,13 @@ func (s *TelemetryService) RecordReading(ctx context.Context, input RecordReadin
 		}
 		if errors.Is(err, domain.ErrNotFound) {
 			active = domain.Excursion{ID: identity.New("exc"), ShipmentID: shipment.ID, Status: domain.ExcursionOpen, ReviewDueAt: now.Add(study.ReviewDeadline), Version: 1, CreatedAt: now, UpdatedAt: now}
-			_ = active.WithReading(reading, now)
+			active.Include(reading, now)
 			if err := tx.InsertExcursion(ctx, active); err != nil {
 				return err
 			}
 		} else {
 			before := active.Version
-			_ = active.WithReading(reading, now)
+			active.Include(reading, now)
 			if err := tx.UpdateExcursion(ctx, active, before); err != nil {
 				return err
 			}

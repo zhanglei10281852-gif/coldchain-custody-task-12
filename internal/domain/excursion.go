@@ -64,12 +64,6 @@ func (r TemperatureReading) Validate() error {
 	return nil
 }
 
-func (e Excursion) WithReading(reading TemperatureReading, now time.Time) Excursion {
-	copy := e
-	copy.Include(reading, now)
-	return copy
-}
-
 func (e *Excursion) Include(reading TemperatureReading, now time.Time) {
 	if e.ReadingCount == 0 || reading.RecordedAt.Before(e.FirstReadingAt) {
 		e.FirstReadingAt = reading.RecordedAt
